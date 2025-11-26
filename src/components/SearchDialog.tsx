@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { FileText, Calendar, Users, GraduationCap, Mail, Home } from "lucide-react";
+import { FileText, Calendar, Music2, GraduationCap, Mail, Home } from "lucide-react";
 
 interface SearchDialogProps {
   open: boolean;
@@ -23,7 +23,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     { name: "Home", path: "/", icon: Home, keywords: "homepage main landing" },
     { name: "News & Updates", path: "/news", icon: FileText, keywords: "articles blog posts announcements" },
     { name: "School Calendar", path: "/events", icon: Calendar, keywords: "events schedule dates activities" },
-    { name: "For Parents", path: "/parents", icon: Users, keywords: "parent portal resources" },
+    { name: "Bell Suggest", path: "/bell-suggest#bell-song", icon: Music2, keywords: "song suggest bell bell-song form" },
     { name: "For Students", path: "/students", icon: GraduationCap, keywords: "student portal grades schedule" },
     { name: "Contact", path: "/contact", icon: Mail, keywords: "contact us reach out email" },
   ];
@@ -34,7 +34,15 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
   );
 
   const handleSelect = (path: string) => {
-    navigate(path);
+    if (path.includes("#")) {
+      const [base, hash] = path.split("#");
+      navigate(base || "/");
+      requestAnimationFrame(() => {
+        window.location.hash = hash ? `#${hash}` : "";
+      });
+    } else {
+      navigate(path);
+    }
     onOpenChange(false);
     setSearch("");
   };

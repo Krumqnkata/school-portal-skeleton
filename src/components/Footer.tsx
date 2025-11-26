@@ -23,7 +23,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-t border-border bg-[hsl(var(--footer-background))] text-[hsl(var(--footer-foreground))]">
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* About Column */}
@@ -32,7 +32,7 @@ const Footer = () => {
               <GraduationCap className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold">School Blog</span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-[hsl(var(--footer-foreground))]/80 leading-relaxed">
               Empowering students and engaging parents through education, innovation, and community.
             </p>
           </div>
@@ -45,10 +45,10 @@ const Footer = () => {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                  >
-                    {link.label}
-                  </a>
+                  className="text-sm text-[hsl(var(--footer-foreground))]/80 transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </a>
                 </li>
               ))}
             </ul>
@@ -62,10 +62,10 @@ const Footer = () => {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                  >
-                    {link.label}
-                  </a>
+                  className="text-sm text-[hsl(var(--footer-foreground))]/80 transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </a>
                 </li>
               ))}
             </ul>
@@ -75,15 +75,15 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Info</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-3 text-sm text-[hsl(var(--footer-foreground))]/80">
                 <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
                 <span>123 Education Street, Learning City, ST 12345</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-3 text-sm text-[hsl(var(--footer-foreground))]/80">
                 <Phone className="h-5 w-5 flex-shrink-0 text-primary" />
                 <span>(555) 123-4567</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-3 text-sm text-[hsl(var(--footer-foreground))]/80">
                 <Mail className="h-5 w-5 flex-shrink-0 text-primary" />
                 <span>info@school.edu</span>
               </li>
@@ -93,7 +93,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[hsl(var(--footer-foreground))]/80">
             © 2025 School Blog. All rights reserved.
           </p>
 
@@ -104,10 +104,10 @@ const Footer = () => {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-primary"
-              >
-                <social.icon className="h-5 w-5" />
-              </a>
+              className="rounded-lg p-2 text-[hsl(var(--footer-foreground))]/80 transition-all hover:bg-accent hover:text-primary"
+            >
+              <social.icon className="h-5 w-5" />
+            </a>
             ))}
           </div>
         </div>

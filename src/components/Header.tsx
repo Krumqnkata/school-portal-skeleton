@@ -21,8 +21,8 @@ const Header = () => {
     name: "Events",
     path: "/events"
   }, {
-    name: "Parents",
-    path: "/parents"
+    name: "Bell Suggest",
+    path: "/bell-suggest#bell-song"
   }, {
     name: "Students",
     path: "/students"
@@ -30,28 +30,28 @@ const Header = () => {
     name: "Contact",
     path: "/contact"
   }];
-  return <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  return <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-[hsl(var(--header-background))] text-[hsl(var(--header-foreground))] shadow-sm">
       <nav className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+        <NavLink to="/bell-suggest#bell-song" className="flex items-center gap-2 transition-opacity hover:opacity-80">
           <Coffee className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold">School Blog</span>
+          <span className="text-xl font-bold">PGKNMA Blog</span>
         </NavLink>
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-6 md:flex">
-          {navLinks.map(link => <NavLink key={link.path} to={link.path} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" activeClassName="text-primary">
+          {navLinks.map(link => <NavLink key={link.path} to={link.path} className="text-sm font-medium text-[hsl(var(--header-foreground))]/80 transition-colors hover:text-[hsl(var(--header-foreground))]" activeClassName="text-[hsl(var(--header-foreground))]">
               {link.name}
             </NavLink>)}
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="hidden sm:inline-flex" onClick={() => setSearchOpen(true)} aria-label="Search">
+          <Button variant="ghost" size="icon" className="hidden sm:inline-flex text-[hsl(var(--header-foreground))]" onClick={() => setSearchOpen(true)} aria-label="Search">
             <Search className="h-5 w-5" />
           </Button>
 
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label="Toggle theme" className="transition-transform hover:scale-105">
+          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label="Toggle theme" className="transition-transform hover:scale-105 text-[hsl(var(--header-foreground))]">
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>

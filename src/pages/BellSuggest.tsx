@@ -1,18 +1,14 @@
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import NewsGrid from "@/components/NewsGrid";
-import Events from "@/components/Events";
+import BellSongForm from "@/components/BellSongForm";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 
-const Index = () => {
+const BellSuggest = () => {
   return (
     <div className="min-h-screen w-full">
       <Header />
       <main>
-        <Hero />
-        <NewsGrid />
-        <Events />
+        <BellSongForm />
       </main>
       <Footer />
       <BackToTop />
@@ -20,4 +16,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default BellSuggest;
