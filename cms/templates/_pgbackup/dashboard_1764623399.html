@@ -1,22 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['user_id'], $_SESSION['session_key'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Проверка на IP
-if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
-    session_unset();
-    session_destroy();
-    header("Location: index.php");
-    exit();
-}
-
-// (По-късно може да се добави проверка за валидност на ключа от база или кеш)
-
-?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,13 +6,13 @@ if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
         <meta name="description" content="">
         <title>Top navbar example · Bootstrap v5.0</title>
         <!-- Bootstrap core CSS -->
-        <link href="templates/bootstrap_theme/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="bootstrap_theme/bootstrap.css" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template -->
-        <link href="templates/navbar-top.css" rel="stylesheet">
+        <link href="navbar-top.css" rel="stylesheet">
     </head>
     <body>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-            <div class="container-fluid"><a class="navbar-brand" href="#"><img class="logo" src="templates/logo-dark.png"></a>
+            <div class="container-fluid"><a class="navbar-brand" href="#"><img class="logo" src="logo-dark.png"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -51,7 +32,7 @@ if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
             Администрация </a>
                             <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                 <li>
-                                    <a class="dropdown-item" href="users.php">Потребители</a>
+                                    <a class="dropdown-item" href="#">Потребители</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="#">Настройки</a>
@@ -65,17 +46,17 @@ if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
                             </ul>
                         </li>
                     </ul>
-                    <div class="d-flex">
-                        <a class="nav-link" href="logout.php"><button class="btn btn-outline-danger" >изход</button></a>
-                    </div>
+                    <form class="d-flex">
+                        <button class="btn btn-outline-danger" type="submit">изход</button>
+                    </form>
                 </div>
             </div>
         </nav>
         <main class="container">
 </main>
-        <script src="templates/assets/js/popper.min.js"></script>
-        <script src="templates/bootstrap/js/bootstrap.min.js"></script>
-        <h1>Здравей, <?php echo $_SESSION['username']; ?></h1><br>
+        <script src="assets/js/popper.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <h1>Здравей, name!</h1><br>
         <p>История на действията</p>
         <div class="history">
             <table class="table">
@@ -102,4 +83,3 @@ if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
         </div>
     </body>
 </html>
-
