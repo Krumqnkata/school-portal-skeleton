@@ -4,6 +4,8 @@ require_once __DIR__ . "/private/db.php";
 
 $errors = "";
 
+$allowed_roles = ['TEACHER', 'ADMIN', 'SUPER ADMIN'];
+
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -27,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 
                 if ($row['is_active'] != 1) {
                     $errors = "Вашият акаунт е деактивиран.";
-                } elseif ($row['class'] !== 'TEACHER' && $row['class'] !== 'ADMIN') {
+                } elseif (!in_array($row['class'], $allowed_roles)) {
                     $errors = "Нямате достъп до административния панел.";
                 } else {
                     // Update last_login timestamp
@@ -41,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     $_SESSION['username'] = $username;
                     $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                     $_SESSION['session_key'] = bin2hex(random_bytes(32));
+                    $_SESSION['role'] = $row['class'];
                     
                     header("Location: dashboard.php");
                     exit;

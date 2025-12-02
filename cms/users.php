@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . "/private/db.php";
+require_once "roles.php";
+
 session_start();
 
 if (!isset($_SESSION['username'], $_SESSION['session_key'])) {
@@ -7,6 +9,23 @@ if (!isset($_SESSION['username'], $_SESSION['session_key'])) {
     exit();
 }
 
+$current_user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM permissions WHERE user_id = ?");
+$stmt->bind_param("i", $current_user_id);
+$stmt->execute();
+$row = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+$user_perms = new User($row);
+
+if ($_SESSION['role'] !== 'SUPER ADMIN'){
+    header("Location: dashboard.php");
+    exit;
+}
+if (!isset($_SESSION['role'])) {
+    header("Location: dashboard.php");
+    exit;
+}
 
     
 // --- Търсене ---

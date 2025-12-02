@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once __DIR__ . "/private/db.php";
+require_once "roles.php";
+
+
 
 // 1. Проверка за логнат потребител и валидация на ID
 if (!isset($_SESSION['user_id'])) {
@@ -20,6 +23,7 @@ if (isset($_SESSION['update_message'])) {
     $message = $_SESSION['update_message'];
     unset($_SESSION['update_message']);
 }
+
 
 // 3. Обработка на POST заявка за обновяване (Post/Redirect/Get Pattern)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
@@ -117,7 +121,34 @@ $user = $result->fetch_assoc();
 $stmt->close();
 
 // Вземане на всички уникални класове
-$class_options = ['STUDENT','TEACHER','ADMIN'];
+$class_options = ['TEACHER', 'ADMIN', 'SUPER ADMIN', 'STUDENT', 'OTHER'];
+
+$stmt = $conn->prepare("SELECT user_edit, user_view, user_edit_role FROM permissions WHERE user_id = ?");
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$user_per = $result->fetch_assoc();
+$stmt->close();
+$user_role = new User($user_per);
+
+$user_edit = false;
+$user_edit_role = false;
+
+// Ако е SUPER ADMIN, винаги може да редактира
+if ($_SESSION['role'] === 'SUPER ADMIN') {
+    $user_edit = true;
+} elseif ($user_role->user_edit()) {
+    $user_edit = true;
+}
+
+if (!$user_role->user_view() && $_SESSION['role'] !== 'SUPER ADMIN') {
+    header("Location: dashboard.php");
+    exit;
+}
+
+if ($user_role->user_edit_role()){
+    $user_edit_role = true;
+}
 
 $conn->close();
 ?>
@@ -157,6 +188,7 @@ $conn->close();
             </div>
         </div>
     </nav>
+    <nav></nav>
 
     <main class="container">
         <h2>Редакция на потребител #<?= htmlspecialchars($user_id) ?></h2>
@@ -169,11 +201,11 @@ $conn->close();
                 <label class="form-label">Статус:</label>
                 <div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="is_active" id="status_active" value="1" <?= ($user['is_active'] == 1) ? 'checked' : '' ?> required>
-                        <label class="form-check-label" for="status_active">Активен</label>
+                        <input class="form-check-input" type="radio" name="is_active" id="status_active" value="1" <?= ($user['is_active'] == 1) ? 'checked' : '' ?> required <?php if($user_edit === false){echo "disabled";} ?>>
+                        <label class="form-check-label" for="status_active" >Активен</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="is_active" id="status_inactive" value="0" <?= ($user['is_active'] == 0) ? 'checked' : '' ?> required>
+                        <input class="form-check-input" type="radio" name="is_active" id="status_inactive" value="0" <?= ($user['is_active'] == 0) ? 'checked' : '' ?> required <?php if($user_edit === false){echo "disabled";} ?>>
                         <label class="form-check-label" for="status_inactive">Неактивен</label>
                     </div>
                 </div>
@@ -182,33 +214,36 @@ $conn->close();
             <!-- User details -->
             <div class="mb-3">
                 <label for="username" class="form-label">Потребителско име:</label>
-                <input type="text" id="username" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required>
+                <input type="text" id="username" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required <?php if($user_edit === false){echo "readonly";} ?>>
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Име:</label>
-                <input type="text" id="name" name="name" class="form-control" value="<?= htmlspecialchars($user['name']) ?>" required>
+                <input type="text" id="name" name="name" class="form-control" value="<?= htmlspecialchars($user['name']) ?>" required <?php if($user_edit === false){echo "readonly";} ?>>
             </div>
             <div class="mb-3">
                 <label for="last_name" class="form-label">Фамилия:</label>
-                <input type="text" id="last_name" name="last_name" class="form-control" value="<?= htmlspecialchars($user['last_name']) ?>" required>
+                <input type="text" id="last_name" name="last_name" class="form-control" value="<?= htmlspecialchars($user['last_name']) ?>" required <?php if($user_edit === false){echo "readonly";} ?>>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Имейл:</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" required>
+                <input type="email" id="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" required <?php if($user_edit === false){echo "readonly";} ?>>
             </div>
+            <?php if ($user_edit_role === true OR $_SESSION['role'] === 'SUPER ADMIN'):?>
             <div class="mb-3">
                 <label class="form-label">Клас:</label>
                 <div>
                     <?php foreach ($class_options as $class_option): ?>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="class" id="class_<?= htmlspecialchars($class_option) ?>" value="<?= htmlspecialchars($class_option) ?>" <?= ($user['class'] == $class_option) ? 'checked' : '' ?> required>
+                            <input class="form-check-input" type="radio" name="class" id="class_<?= htmlspecialchars($class_option) ?>" value="<?= htmlspecialchars($class_option) ?>" <?= ($user['class'] == $class_option) ? 'checked' : '' ?> required <?php if($user_edit === false){echo "disabled";} ?>>
                             <label class="form-check-label" for="class_<?= htmlspecialchars($class_option) ?>"><?= htmlspecialchars($class_option) ?></label>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Password section -->
+            <?php if ($user_edit === true):?>
             <div class="section-divider">
                 <h5>Промяна на парола</h5>
                 <p class="text-muted">Оставете полетата празни, ако не желаете да променяте паролата.</p>
@@ -221,13 +256,14 @@ $conn->close();
                     <input type="password" id="confirm_password" name="confirm_password" class="form-control">
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Audit Trail Section -->
             <div class="section-divider">
                 <h5>Информация за акаунта</h5>
                 <div class="mb-3">
                     <label for="created_at" class="form-label">Дата на създаване:</label>
-                    <input type="datetime-local" id="created_at" name="created_at" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($user['created_at'])) ?>" required>
+                    <input type="datetime-local" id="created_at" name="created_at" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($user['created_at'])) ?>" required <?php if($user_edit === false){echo "readonly";} ?>>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Последно влизане:</label>
@@ -239,12 +275,12 @@ $conn->close();
                 </div>
                  <div class="mb-3">
                     <label class="form-label">Променен последно от ID(USER):</label>
-                    <input type="text" class="form-control" value="<?= $user['updated_by'] ? htmlspecialchars($user['updated_by']) : 'N/A' ?>" readonly>
+                    <input type="text" class="form-control" value="<?= $user['updated_by']  ? htmlspecialchars($user['updated_by']) : 'N/A' ?>"  readonly >
                 </div>
             </div>
 
-            <button type="submit" name="update" class="btn btn-primary mt-3">Обнови</button>
-            <a href="users.php" class="btn btn-secondary mt-3">Назад към списъка</a>
+            <button type="submit" name="update" class="btn btn-primary mt-3" <?php if($user_edit === false){echo "disabled";} ?>>Обнови</button>
+            <a href="users.php" class="btn btn-secondary mt-3" >Назад към списъка</a>
         </form>
     </main>
 
